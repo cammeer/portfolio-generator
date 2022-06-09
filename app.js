@@ -1,7 +1,6 @@
 const fs = require('fs');
-const generatePage = require('./src/page-template');
 const inquirer = require('inquirer');
-
+const generatePage = require('./src/page-template');
 
 const promptUser = () => {
     return inquirer.prompt([{
@@ -40,13 +39,7 @@ const promptUser = () => {
             type: 'input',
             name: 'about',
             message: 'Provide some information about yourself:',
-            when: ({ confirmAbout }) => {
-                if (confirmAbout) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+            when: ({ confirmAbout }) => confirmAbout
         }
     ]);
 };
@@ -135,8 +128,10 @@ promptUser()
     .then(promptProject)
     .then(portfolioData => {
         const pageHTML = generatePage(portfolioData);
+
         fs.writeFile('./index.html', pageHTML, err => {
             if (err) throw new Error(err);
+
             console.log('Page created! Check out index.html in this directory to see it!');
         });
     });
